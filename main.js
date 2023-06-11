@@ -1,17 +1,19 @@
 // ==UserScript==
-// @name         Check All Checkboxes with ID "evaIndex" on uetcs domain with Button and other actions
+// @name         UESTC评教
 // @namespace    http://tampermonkey-check-evaIndex-button-uestc-actions
-// @version      1
-// @description  Add a button on the page to check all checkboxes with ID "evaIndex" on pages with "uestc" in the domain name, and perform other actions after clicking the button.
+// @version      1.1.1
+// @description  用法：导入油猴。进入评教页，点击右上角按钮。
 // @match        *://*/*
 // @grant        none
+// @license      GNU General Public License v3.0 or later
+
 // ==/UserScript==
 
 (function() {
     'use strict';
 
     const button = document.createElement('button');
-    button.innerText = 'Check All evaIndex Checkboxes and Perform Other Actions';
+    button.innerText = '点此按钮一键评教';
     button.style.position = 'fixed';
     button.style.top = '50px';
     button.style.right = '50px';

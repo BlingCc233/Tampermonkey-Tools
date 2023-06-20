@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         UESTC评教
 // @namespace    http://tampermonkey-check-evaIndex-button-uestc-actions
-// @version      1.1.1
+// @version      1.1.2
 // @description  用法：导入油猴。进入评教页，点击右上角按钮。
-// @match        *://*/*
+// @match        http://eams.uestc/*
 // @grant        none
+// @author       BlingCc
 // @license      GNU General Public License v3.0 or later
 
 // ==/UserScript==
@@ -30,6 +31,23 @@
             const ulElements = td.querySelectorAll('ul');
             ulElements.forEach((ul) => {
                 const liElements = ul.querySelectorAll('li');
+
+                const li5 = liElements[4]
+                var rect = li5.getBoundingClientRect();
+                var x = rect.left + (rect.width / 2);
+                var y = rect.top + (rect.height / 2);
+
+                var event = new MouseEvent('click', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true,
+                    clientX: x,
+                    clientY: y
+                });
+                setTimeout(function() {
+                    li5.dispatchEvent(event);
+                }, 0);
+
                 if (liElements.length >= 5) {
                     liElements[4].click();
                 }

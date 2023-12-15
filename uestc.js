@@ -59,3 +59,72 @@
 
     document.body.appendChild(button);
 })();
+
+/*
+// Click the fifth li element in all ul elements inside td elements whose ID matches the pattern "starTd_数字"
+        const tdElements = document.querySelectorAll('td[id^="starTd_"]');
+        tdElements.forEach((td) => {
+            const ulElements = td.querySelectorAll('ul');
+            ulElements.forEach((ul) => {
+                const liElements = ul.querySelectorAll('li');
+ 
+                const li5 = liElements[4]
+                var rect = li5.getBoundingClientRect();
+                var x = rect.left + (rect.width / 2);
+                var y = rect.top + (rect.height / 2);
+ 
+                var event = new MouseEvent('click', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true,
+                    clientX: x,
+                    clientY: y
+                });
+                setTimeout(function() {
+                    li5.dispatchEvent(event);
+                }, 0);
+ 
+                if (liElements.length >= 5) {
+                    liElements[4].click();
+                }
+            });
+        });
+    */
+
+/*
+button.addEventListener('click', () => {
+  function simulateMouseEvent(element, eventType, x, y) {
+    var event = new MouseEvent(eventType, {
+      bubbles: true,
+      cancelable: true,
+      clientX: x,
+      clientY: y
+    });
+    element.dispatchEvent(event);
+  }
+
+  function clickFifthLi(num) {
+    var tdId = "starTd_" + num;
+    var tdElement = document.getElementById(tdId);
+    if (tdElement) {
+      var ulElement = tdElement.querySelector("ul");
+      var liElements = ulElement.querySelectorAll("li");
+      if (liElements.length >= 5) {
+        var fifthLiElement = liElements[4];
+        var rect = fifthLiElement.getBoundingClientRect();
+        var x = rect.left + rect.width / 2;
+        var y = rect.top + rect.height / 2;
+        simulateMouseEvent(fifthLiElement, 'mouseenter', x, y);
+        simulateMouseEvent(fifthLiElement, 'click', x, y);
+        simulateMouseEvent(fifthLiElement, 'mouseleave', x, y);
+      }
+    }
+  }
+
+  // 循环调用 clickFifthLi 函数，num 从 0 到 10
+  for (var num = 0; num <= 10; num++) {
+    clickFifthLi(num);
+  }
+});
+
+*/

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         UESTC评教
-// @namespace    http://tampermonkey-check-evaIndex-button-uestc-actions
-// @version      1.2.1
-// @description  用法：导入油猴。进入评教页，点击右上角按钮。
+// @namespace    BlingCc_UESTC
+// @version      1.2.5
+// @description  用法：导入油猴。进入评教页，点击右上角按钮。（除星星外都帮你填好）
 // @match        https://eams.uestc.edu.cn/*
 // @grant        none
 // @author       BlingCc
@@ -16,11 +16,41 @@
     'use strict';
 
     const button = document.createElement('button');
-    button.innerText = '点此按钮一键评教';
+    button.innerText = '一键评教';
     button.style.position = 'fixed';
     button.style.top = '50px';
     button.style.right = '50px';
+    button.style.backgroundColor = '#FEFEFE';
+    button.style.boxShadow = '0 4px 20px rgba(0,0,0,.3)';
+    button.style.fontWeight = '600';
+    button.style.fontSize = "1.2em";
+    button.style.padding = '0.75em 1em';
+    button.style.color = '#80AAD3';
+    button.style.border = '0.15em solid #80AAD3';
+    button.style.borderRadius = '2em';
+    button.style.cursor = 'pointer';
+    button.style.transition = '0.4s';
+
+button.addEventListener('mouseover', function() {
+    button.style.backgroundColor = '#80AAD3';
+    button.style.color  = '#FEFEFE';
+    button.style.border = '0.15em solid #FEFEFE';
+
+  });
+  
+  button.addEventListener('mouseout', function() {
+
+    button.style.backgroundColor = '#FEFEFE';
+    button.style.color  = '#80AAD3';
+    button.style.border = '0.15em solid #80AAD3';
+
+  });
+    
     button.addEventListener('click', () => {
+        button.style.border = '0.15em solid #232323';
+        button.style.color  = '#232323';
+
+
         var idRegex = /^option_(\d+)_0$/;
         var inputs = document.getElementsByTagName('input');
 

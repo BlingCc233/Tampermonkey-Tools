@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         UESTC评教
 // @namespace    BlingCc_UESTC
-// @version      1.2.5
+// @version      1.2.7
 // @description  用法：导入油猴。进入评教页，点击右上角按钮。（除星星外都帮你填好）
-// @match        https://eams.uestc.edu.cn/*
+// @match        http://eams.uestc.edu.cn/eams/*
+// @match        https://eams.uestc.edu.cn/eams/*
 // @grant        none
 // @author       BlingCc
 // @license      GNU General Public License v3.0 or later
@@ -89,7 +90,6 @@ button.addEventListener('mouseover', function() {
 
     document.body.appendChild(button);
 })();
-
 /*
 // Click the fifth li element in all ul elements inside td elements whose ID matches the pattern "starTd_数字"
         const tdElements = document.querySelectorAll('td[id^="starTd_"]');

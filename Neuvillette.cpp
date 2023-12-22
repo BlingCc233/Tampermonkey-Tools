@@ -8,7 +8,7 @@ using namespace std;
 int main() {
 
 
-    cout << " ËµÃ÷:°´ÏÂ¡°capslock¡±¼üÒÔ¸ßËÙÐý×ª£¬ÔÙ´Î°´ÏÂÍ£Ö¹£¬¸Ã³ÌÐòÃ»ÓÐ×¢ÈëÄÚ´æ£¬²»»á·âºÅ \n Written by BlingCc";
+    cout << " è¯´æ˜Ž:æŒ‰ä¸‹â€œcapslockâ€é”®ä»¥é«˜é€Ÿæ—‹è½¬ï¼Œå†æ¬¡æŒ‰ä¸‹åœæ­¢ï¼Œè¯¥ç¨‹åºæ²¡æœ‰æ³¨å…¥å†…å­˜ï¼Œä¸ä¼šå°å· \n Written by BlingCc";
 
     while (true) {
         if (GetKeyState(VK_CAPITAL) & 1) {

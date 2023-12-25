@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name               skip youtube ad
 // @name:zh-CN         youtube跳过广告
-// @namespace          vince.youtube
+// @namespace    bilibili-auto-fullscreen-script
 // @version            1.0.0
 // @description        hide youtube's ad,auto click "skip ad"
-// @description:zh-CN  自动点击"skip ad"
-// @author             vince ding
+// @description:zh-CN  自动点击"skip ad"、
 // @match        https://*.youtube.com/*
 // @grant        none
 // @author       BlingCc
@@ -18,9 +17,9 @@
     var skipInt;
     var log=function(msg){};
     var skipAd=function(){
-        var skipbtn=document.querySelector(".ytp-ad-skip-button-modern.ytp-button")||document.querySelector(".videoAdUiSkipButton ");
+        var skipbtn=document.querySelector(".ytp-ad-skip-button-modern.ytp-button");
         if(skipbtn){
-           skipbtn=document.querySelector(".ytp-ad-skip-button-modern.ytp-button")||document.querySelector(".videoAdUiSkipButton ");
+           skipbtn=document.querySelector(".ytp-ad-skip-button-modern.ytp-button");
            log("skip");
            skipbtn.click();
            if(skipInt) {clearTimeout(skipInt);}

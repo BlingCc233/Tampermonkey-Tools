@@ -5,6 +5,15 @@
 // @description  在Bilibili网站自动全屏播放视频
 // @author       BlingCc
 // @match        https://www.bilibili.com/*
+
+// @grant        GM_xmlhttpRequest
+// @grant        GM_info
+// @grant        GM_getValue
+// @grant        unsafeWindow
+// @run-at       document-start
+// @connect      googlevideo.com
+// @compatible   firefox >=52
+// @compatible   chrome >=55
 // @license      MIT
 // @grant        none
 // ==/UserScript==

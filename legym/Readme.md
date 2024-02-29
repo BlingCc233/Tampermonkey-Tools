@@ -1,6 +1,4 @@
 #乐健无定位签到
 
-- 安卓使用小黄鸟抓包
-- IOS使用stram抓包
-- 抓包只需进入乐健任意界面即可
-- 将抓包得到的请求头放入Config.py的headers中即可
+- 在Config.py中输入账密
+- 运行legym.py

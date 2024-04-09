@@ -14,4 +14,4 @@
 
 ## 各种python网络脚本
 
-- [乐健签到](https://github.com/BlingCc233/Tampermonkey-Tools/tree/main/legym)
+- [乐健签到(已不可用，新版见单独的库)](https://github.com/BlingCc233/Tampermonkey-Tools/tree/main/legym)

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UESTC评教
 // @namespace    BlingCc_UESTC
-// @version      1.3.0
+// @version      1.3.1
 // @description  用法：导入油猴。进入评教页，点击右上角按钮。（除星星外都帮你填好）
 // @match        http://eams.uestc.edu.cn/eams/*
 // @match        https://eams.uestc.edu.cn/eams/*
@@ -146,6 +146,15 @@ let evaluations = {
         '讲课非常认真，让人感到如沐春风',
     ],
 };
+
+function randomNum(maxNum, minNum = 0) {
+    if (maxNum < minNum) {
+        let tmp = maxNum;
+        maxNum = minNum;
+        minNum = tmp;
+    }
+    return parseInt(Math.random() * (maxNum - minNum) + minNum, 10);
+}
     
     button.addEventListener('click', () => {
         button.style.border = '0.15em solid #232323';

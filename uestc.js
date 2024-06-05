@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         UESTC评教
 // @namespace    BlingCc_UESTC
-// @version      1.3.1
+// @version      1.3.3
 // @description  用法：导入油猴。进入评教页，点击右上角按钮。（除星星外都帮你填好）
 // @match        http://eams.uestc.edu.cn/eams/*
 // @match        https://eams.uestc.edu.cn/eams/*
+// @match        https://eams-uestc-edu-cn-s.vpn.uestc.edu.cn:8118/*
 // @grant        none
 // @author       BlingCc
 // @license      GNU General Public License v3.0 or later

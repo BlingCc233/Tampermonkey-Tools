@@ -14,4 +14,5 @@
 
 ## 各种python网络脚本
 
-- 乐健签到(已不可用，新版见[单独的库](https://github.com/BlingCc233/MITM_modules))
+- 乐健签到(已不可用，新版见[单独的库(也不可用了)](https://github.com/BlingCc233/MITM_modules))
+- [河畔爬虫](https://github.com/BlingCc233/Tampermonkey-Tools/blob/main/uestc_bbs_lottery.py)

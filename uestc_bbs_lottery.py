@@ -29,12 +29,20 @@ typography_list = []
 
 # 把键值对转换为列表
 for key, value in typography.items():
-    if key != 'BlingCc':
+        # 如果这个value的list的某个元素包含“不玩原”，continue,
+        if any(x for x in value if "不玩原" in x):
+            continue
+        # 过滤自己
+        if key == "BlingCc":
+             continue
         typography_list.append({key : value})
 
 # 把列表shuffle五次
 for i in range(5):
     random.shuffle(typography_list)
 
+for item in typography_list:
+    print(item)
+
 # 从列表中随机取出1个元素
-print(random.choice(typography_list))
+print(f"\n\n\t恭喜这位pu：\n", random.choice(typography_list))

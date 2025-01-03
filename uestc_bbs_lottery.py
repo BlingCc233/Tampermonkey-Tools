@@ -8,7 +8,7 @@ import re
 headers = {
     "accept": "application/json, text/plain, */*",
     "accept-language": "zh-CN,zh;q=0.9",
-    "authorization": "T1VJH6Le0eIT1dkvie0dGsjFeJCoGGmRKQ3C5aZJzmVZdnrQ4MfGbWOGaOtH1+modZwZ1jZ280VyK+OKY3pWqxFV0NmVCncdsmt43qf4c6syYICxbGUU2oXEHYUgxeLG6U8e+AmCJk7eS02zjegZ",
+    "authorization": 你的认证信息,
     "priority": "u=1, i",
     "sec-ch-ua": "\"Google Chrome\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\"",
     "sec-ch-ua-mobile": "?0",
@@ -16,7 +16,7 @@ headers = {
     "sec-fetch-dest": "empty",
     "sec-fetch-mode": "cors",
     "sec-fetch-site": "same-origin",
-    "cookie": "_ga=GA1.3.1931977924.1694421581; _ga_QYKCGTHFGK=GS1.3.1702393553.1.0.1702393553.0.0.0; v3hW_2132_smile=10D1; v3hW_2132_home_readfeed=1722356043; v3hW_2132_nofavfid=1; v3hW_2132_lastvisit=1733923290; newbbs_a0th=0_oALTyffUdY7VCdnnOZrN589Z; newbbs_auth=265527__ovgX1z3dY7VCdhoIZt_6hOB; v3hW_2132_saltkey=hQFWZSOs; v3hW_2132_auth=309fHkeu1NOD0%2BlySYMT9xJmrYf6dYtWut%2FwmXMnHKCVTWnkSpE3AvY%2Bj4ZY6zHg%2BWsFLj1IPXjg2QSzo22PKD4LjA4; v3hW_2132_ulastactivity=583fJpWBGmfBThOCW3ECrC8pbRYzwiLnoJQSYBhnDCqpnYI5LCaL; v3hW_2132_sendmail=1; v3hW_2132_viewid=uid_287813; v3hW_2132_home_diymode=1; v3hW_2132_sid=VMtsuw; v3hW_2132_lip=117.173.139.37%2C1735920702; v3hW_2132_lastact=1735920809%09home.php%09space",
+    "cookie": 你的认证信息,
     "Referer": "https://bbs.uestc.edu.cn/thread/2235968?page=1",
     "Referrer-Policy": "strict-origin-when-cross-origin"
 }

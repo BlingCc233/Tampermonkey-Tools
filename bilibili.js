@@ -2,7 +2,7 @@
 // @name         Bilibili自动全屏脚本
 // @namespace    bilibili-auto-fullscreen-script
 // @version      1.3
-// @description  在Bilibili网站自动全屏播放视频，按T键切换全屏
+// @description  在Bilibili网站自动全屏播放视频，支持T键切换
 // @author       BlingCc
 // @match        https://www.bilibili.com/*
 // @license      MIT
@@ -12,79 +12,138 @@
 (function() {
     'use strict';
 
-    // 等待页面完全加载后执行全屏操作
-    function waitForElement(selector, callback, maxTries = 10, interval = 1000) {
-        let tries = 0;
-        
-        function check() {
-            const element = document.querySelector(selector);
-            if (element) {
-                callback(element);
-                return;
-            }
-            
-            tries++;
-            if (tries < maxTries) {
-                setTimeout(check, interval);
-            }
-        }
-        
-        check();
+    let fullscreenObserver = null;
+    let isAutoFullscreenEnabled = true;
+
+    // 主初始化函数
+    function init() {
+        setupVideoObserver();
+        setupKeyboardListener();
     }
 
-    // 触发全屏
-    function triggerFullscreen() {
-        const fullscreenButton = document.querySelector('[aria-label="网页全屏"]');
-        if (!fullscreenButton) return;
+    // 设置视频容器观察器
+    function setupVideoObserver() {
+        const observer = new MutationObserver((_, obs) => {
+            const videoContainer = document.querySelector('.bpx-player-video-area');
+            if (videoContainer) {
+                obs.disconnect();
+                prepareForFullscreen(videoContainer);
+            }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
 
-        // 首先尝试直接触发点击事件
-        try {
-            fullscreenButton.click();
-        } catch (e) {
-            // 如果直接点击失败，则使用模拟鼠标事件
-            const rect = fullscreenButton.getBoundingClientRect();
-            const x = rect.left + rect.width / 2;
-            const y = rect.top + rect.height / 2;
-            
-            simulateMouseEvent(fullscreenButton, 'mouseenter', x, y);
-            simulateMouseEvent(fullscreenButton, 'click', x, y);
-            simulateMouseEvent(fullscreenButton, 'mouseleave', x, y);
+    // 准备全屏操作
+    function prepareForFullscreen(videoContainer) {
+        activateVideoControls(videoContainer);
+        setupFullscreenButtonObserver(videoContainer);
+    }
+
+    // 激活视频控制栏
+    function activateVideoControls(element) {
+        const { left, top, width, height } = element.getBoundingClientRect();
+        dispatchMouseEvent(element, 'mouseenter', left + width/2, top + height/2);
+    }
+
+    // 设置全屏按钮观察器
+    function setupFullscreenButtonObserver(container) {
+        fullscreenObserver = new MutationObserver((_, obs) => {
+            const fullscreenBtn = getFullscreenButton();
+            if (fullscreenBtn) {
+                obs.disconnect();
+                if (isAutoFullscreenEnabled) triggerFullscreen(fullscreenBtn);
+            }
+        });
+        fullscreenObserver.observe(container, { childList: true, subtree: true });
+    }
+
+    // 触发全屏操作
+    function triggerFullscreen(button) {
+        // 优先使用直接点击
+        if (!attemptDirectClick(button)) {
+            simulateRealisticClick(button);
+        }
+        isAutoFullscreenEnabled = false; // 防止重复触发
+    }
+
+    // 尝试直接点击
+    function attemptDirectClick(element) {
+        const preClickLabel = element.getAttribute('aria-label');
+        element.click();
+        setTimeout(() => {
+            if (element.getAttribute('aria-label') !== preClickLabel) return true;
+        }, 100);
+        return false;
+    }
+
+    // 模拟真实点击
+    function simulateRealisticClick(element) {
+        const { left, top, width, height } = element.getBoundingClientRect();
+        const eventSequence = ['mouseenter', 'mousedown', 'mouseup', 'click'];
+        eventSequence.forEach(eventType => {
+            dispatchMouseEvent(element, eventType, left + width/2, top + height/2);
+        });
+    }
+
+    // 设置键盘监听器
+    function setupKeyboardListener() {
+        document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 't') handleFullscreenToggle();
+        });
+    }
+
+    // 处理全屏切换
+    function handleFullscreenToggle() {
+        const videoContainer = document.querySelector('.bpx-player-video-area');
+        if (!videoContainer) return;
+
+        activateVideoControls(videoContainer);
+        const fullscreenBtn = getFullscreenButton() || findAlternativeFullscreenButton();
+        
+        if (fullscreenBtn) {
+            triggerFullscreen(fullscreenBtn);
+        } else {
+            setupTemporaryButtonObserver(videoContainer);
         }
     }
 
-    function simulateMouseEvent(element, eventType, x, y) {
-        const event = new MouseEvent(eventType, {
+    // 获取当前全屏按钮
+    function getFullscreenButton() {
+        return document.querySelector('[aria-label="网页全屏"], [aria-label="退出网页全屏"]');
+    }
+
+    // 查找备用全屏按钮
+    function findAlternativeFullscreenButton() {
+        return document.querySelector('.bpx-player-ctrl-web');
+    }
+
+    // 设置临时按钮观察器
+    function setupTemporaryButtonObserver(container) {
+        const tempObserver = new MutationObserver((_, obs) => {
+            const btn = getFullscreenButton() || findAlternativeFullscreenButton();
+            if (btn) {
+                obs.disconnect();
+                triggerFullscreen(btn);
+            }
+        });
+        tempObserver.observe(container, { childList: true, subtree: true });
+    }
+
+    // 派发鼠标事件
+    function dispatchMouseEvent(element, type, x, y) {
+        element.dispatchEvent(new MouseEvent(type, {
             view: window,
             bubbles: true,
             cancelable: true,
             clientX: x,
             clientY: y
-        });
-        element.dispatchEvent(event);
+        }));
     }
 
-    // 初始化
-    function initialize() {
-        // 等待视频播放器加载完成
-        waitForElement('.bpx-player-video-area', (videoWrap) => {
-            // 确保播放器控件已加载
-            waitForElement('[aria-label="网页全屏"]', () => {
-                triggerFullscreen();
-            });
-        });
-
-        // 添加按T切换全屏的事件监听
-        document.addEventListener('keydown', (e) => {
-            if (e.key.toLowerCase() === 't') {
-                triggerFullscreen();
-            }
-        });
-    }
-
-    // 当页面加载完成时初始化
-    if (document.readyState === 'complete') {
-        initialize();
+    // 启动脚本
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
     } else {
-        window.addEventListener('load', initialize);
+        init();
     }
 })();

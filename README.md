@@ -11,6 +11,7 @@
 
 - [那维莱特滋水](https://github.com/BlingCc233/Tampermonkey-Tools/blob/main/Neuvillette.cpp)（管理员身份运行）
 - [文件拆分合并](https://github.com/BlingCc233/Tampermonkey-Tools/tree/main/merge)
+- [Win使用Mac快捷键](https://github.com/BlingCc233/Tampermonkey-Tools/blob/main/WinMac.ahk)
 
 ## 各种python网络脚本
 

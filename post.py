@@ -11,21 +11,25 @@ URL = ""
 
 # 定义请求头 (确保Token有效)
 HEADERS = {
-    "Host": "",
+    "Host": "cdn.blingcc.eu.org",
     "Accept": "application/json, text/plain, */*",
-    "Authorization": "Bearer ",
+    "Authorization": "Bearer O2A6VQmfnGcK7J4lu2JqaNhW3U71hySrwW19KnYza2737a09",
     "Content-Language": "zh-CN",
     "Sec-Fetch-Site": "same-origin",
     "Accept-Language": "en-US,en;q=0.9",
     "Accept-Encoding": "gzip, deflate, br",
     "Sec-Fetch-Mode": "cors",
     "Content-Type": "application/json",
-    "Origin": "",
+    "Origin": "https://cdn.blingcc.eu.org",
     "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/137.0.7151.51 Mobile/15E148 Safari/604.1",
-    "Referer": "",
+    "Referer": "https://cdn.blingcc.eu.org/588802d8",
     "Connection": "keep-alive",
     "Sec-Fetch-Dest": "empty"
 }
+
+# --- Telegram Bot 配置 ---
+TELEGRAM_BOT_TOKEN = ""
+TELEGRAM_CHAT_ID = ""
 
 # 定义配置文件路径
 FILE_PATHS = {
@@ -38,6 +42,37 @@ REQUEST_TIMEOUT = 15  # 每个代理的请求超时时间（秒）
 
 # --- 日志配置 ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+
+def send_telegram_notification(token, chat_id, message, proxy_config=None):
+    """
+    向指定的 Telegram 用户发送消息。
+    :param token: Telegram Bot 的 Token
+    :param chat_id: 接收消息用户的 Chat ID
+    :param message: 要发送的消息文本
+    :param proxy_config: (可选) 用于发送请求的代理配置字典
+    """
+    api_url = f"https://api.telegram.org/bot{token}/sendMessage"
+    payload = {
+        'chat_id': chat_id,
+        'text': message,
+        'parse_mode': 'Markdown'  # 使用 Markdown 格式化消息
+    }
+    
+    proxy_display_info = "无代理 (直接连接)"
+    if proxy_config and 'http' in proxy_config:
+        proxy_display_info = proxy_config['http']
+
+    try:
+        # 使用传入的代理配置发送请求
+        logging.info(f"准备通过代理 [{proxy_display_info}] 发送 Telegram 通知...")
+        response = requests.post(api_url, json=payload, timeout=10, proxies=proxy_config)
+        # 如果请求不成功 (例如, token错误, chat_id无效), 抛出异常
+        response.raise_for_status()
+        logging.info(f"成功通过代理 [{proxy_display_info}] 发送 Telegram 通知。")
+    except requests.exceptions.RequestException as e:
+        logging.error(f"通过代理 [{proxy_display_info}] 发送 Telegram 通知失败: {e}")
+
 
 def parse_proxy_url(proxy_line):
     """
@@ -65,30 +100,22 @@ def parse_proxy_url(proxy_line):
         username = None
         password = None
 
-        # urlparse 会自动 URL 解码 username 和 password 字段
-        # 示例: socks://Og%3D%3D@... -> parsed_url.username == "Og=="
         if parsed_url.username:
-            raw_username_info = parsed_url.username # 已经是 URL 解码后的
-            # 尝试 Base64 解码，看是否是 user:pass 格式
+            raw_username_info = parsed_url.username
             try:
                 decoded_userinfo = base64.b64decode(raw_username_info).decode('utf-8')
                 if ':' in decoded_userinfo:
                     username, password = decoded_userinfo.split(':', 1)
-                else: # 如果解码后没有冒号，则认为是纯用户名
+                else:
                     username = decoded_userinfo
             except (base64.binascii.Error, UnicodeDecodeError):
-                # 不是有效的 Base64 编码，或者解码后不是 UTF-8
-                # 此时，将 URL 解码后的 parsed_url.username 视为字面用户名
                 username = raw_username_info 
-                if parsed_url.password: # 检查是否有独立的 password 字段 (如 socks://user:pass@host:port)
-                    password = parsed_url.password # 已经是 URL 解码后的
+                if parsed_url.password:
+                    password = parsed_url.password
 
-        # 构建 requests 库的代理字符串
-        # 使用 socks5h 以通过代理进行 DNS 解析
         proxy_scheme = "socks5h" 
         
-        if username and password is not None: # password 可以是空字符串
-            # 需要对用户名和密码进行 URL 编码，以防包含特殊字符
+        if username and password is not None:
             safe_username = urllib.parse.quote(username)
             safe_password = urllib.parse.quote(password)
             proxy_address = f"{proxy_scheme}://{safe_username}:{safe_password}@{host}:{port}"
@@ -111,7 +138,7 @@ def load_proxies(filename=PROXY_FILE):
         with open(filename, 'r', encoding='utf-8') as f:
             for line in f:
                 line = line.strip()
-                if line and not line.startswith('#'): # 忽略空行和注释行
+                if line and not line.startswith('#'):
                     parsed = parse_proxy_url(line)
                     if parsed:
                         proxies.append(parsed)
@@ -148,23 +175,15 @@ def load_payload_data():
     }
 
 def main():
-    # 1. 加载请求体数据
     payload_data = load_payload_data()
     if not payload_data:
-        sys.exit(1) # 配置文件加载失败，退出
+        sys.exit(1)
 
-    # 2. 加载代理列表
     proxies_list = load_proxies()
     if not proxies_list:
-        logging.warning("没有可用的代理。将尝试直接连接（如果需要）。")
-        # 如果没有代理，可以添加一个 None 到列表，表示直接连接
-        # proxies_list.append(None) 
-        # 或者，如果必须通过代理，则直接退出
         logging.error("没有代理可供使用，无法发送请求。")
         sys.exit(1)
 
-
-    # 3. 循环尝试发送请求
     success = False
     for i, proxy_config in enumerate(proxies_list):
         current_proxy_display = proxy_config['http'] if proxy_config else "无代理 (直接连接)"
@@ -174,15 +193,13 @@ def main():
             response = requests.post(
                 URL,
                 headers=HEADERS,
-                data=json.dumps(payload_data), # 确保 payload 是 JSON 字符串
+                data=json.dumps(payload_data),
                 proxies=proxy_config,
                 timeout=REQUEST_TIMEOUT
             )
             
             logging.info(f"请求发送状态码: {response.status_code} (使用代理: {current_proxy_display})")
 
-            # 检查响应是否成功 (通常 2xx 状态码表示成功)
-            # response.ok 会检查 status_code < 400
             if response.ok:
                 logging.info("请求成功!")
                 try:
@@ -191,11 +208,26 @@ def main():
                 except json.JSONDecodeError:
                     logging.info("响应内容 (Text):")
                     logging.info(response.text)
+                
                 success = True
-                break  # 成功，跳出循环
+                
+                # --- 修改处: 发送 Telegram 成功通知，并传入成功的代理配置 ---
+                success_message = (
+                    f"✅ *任务成功*\n\n"
+                    f"数据已成功发送到 CC云。\n\n"
+                    f"*共有代理:*\n`{len(proxies_list)}`条。"
+                )
+                send_telegram_notification(
+                    TELEGRAM_BOT_TOKEN, 
+                    TELEGRAM_CHAT_ID, 
+                    success_message, 
+                    proxy_config=proxy_config  # 传入成功的代理
+                )
+                # --- 通知代码结束 ---
+
+                break
             else:
                 logging.warning(f"请求返回错误状态码: {response.status_code}。响应: {response.text[:200]}...")
-                # 根据需要，可以决定某些4xx错误是否也算作“不可恢复”，从而不继续尝试其他代理
 
         except requests.exceptions.Timeout:
             logging.warning(f"使用代理 {current_proxy_display} 请求超时 ({REQUEST_TIMEOUT}秒)。")
@@ -210,9 +242,21 @@ def main():
             logging.info("尝试下一个代理...")
 
     if success:
-        logging.info("数据已成功发送。")
+        logging.info("数据已成功发送。脚本执行完毕。")
     else:
         logging.error("所有代理尝试均失败，数据未能发送。")
+        # --- 修改处: 发送失败通知，不使用代理以提高送达率 ---
+        failure_message = (
+            f"❌ *任务失败*\n\n"
+            f"所有 {len(proxies_list)} 个代理均尝试失败，数据未能发送到 CC云。"
+        )
+        send_telegram_notification(
+            TELEGRAM_BOT_TOKEN, 
+            TELEGRAM_CHAT_ID, 
+            failure_message, 
+            proxy_config=None # 不传代理
+        )
+        # --- 通知代码结束 ---
         sys.exit(1)
 
 if __name__ == "__main__":

@@ -11,18 +11,18 @@ URL = ""
 
 # 定义请求头 (确保Token有效)
 HEADERS = {
-    "Host": "cdn.blingcc.eu.org",
+    "Host": "",
     "Accept": "application/json, text/plain, */*",
-    "Authorization": "Bearer O2A6VQmfnGcK7J4lu2JqaNhW3U71hySrwW19KnYza2737a09",
+    "Authorization": "Bearer ",
     "Content-Language": "zh-CN",
     "Sec-Fetch-Site": "same-origin",
     "Accept-Language": "en-US,en;q=0.9",
     "Accept-Encoding": "gzip, deflate, br",
     "Sec-Fetch-Mode": "cors",
     "Content-Type": "application/json",
-    "Origin": "https://cdn.blingcc.eu.org",
+    "Origin": "",
     "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/137.0.7151.51 Mobile/15E148 Safari/604.1",
-    "Referer": "https://cdn.blingcc.eu.org/588802d8",
+    "Referer": "",
     "Connection": "keep-alive",
     "Sec-Fetch-Dest": "empty"
 }

@@ -143,7 +143,7 @@ def main():
             'IP-CIDR,192.168.0.0/16,DIRECT',
             'IP-CIDR,198.18.0.0/16,DIRECT',
             'GEOIP,CN,DIRECT',
-            'MATCH,URL-Test'  # 默认规则: 其他所有流量走 URL-Test 自动测速组
+            'MATCH,Proxy-Select'  # 默认规则: 其他所有流量走 URL-Test 自动测速组
         ]
         # ===== 修改部分结束 =====
     }
